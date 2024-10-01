@@ -1,0 +1,13 @@
+<!-- <div class="loading-overlay-panel" *ngIf="showLoader">
+  <mat-spinner class="overlay-spinner" [diameter]="35"></mat-spinner>
+</div>
+<div *ngIf="isPageWithMenu() && (isLoggedIn() | async); else loginPage">
+  <app-header></app-header>
+</div> -->
+<p-toast></p-toast>
+<div *ngIf="isPageWithMenu() && (isLoggedIn() | async); else loginPage">
+  <app-layout></app-layout>
+</div>
+<ng-template #loginPage>
+  <router-outlet></router-outlet>
+</ng-template>
