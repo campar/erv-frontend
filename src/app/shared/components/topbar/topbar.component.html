@@ -1,0 +1,50 @@
+<div class="layout-topbar">
+      <span #menubutton class="menu-toggle-button">
+            <p-toggleButton *ngIf="layoutService.isDesktop() && !layoutService.isOverlay()"
+                            [(ngModel)]="layoutService.state.staticMenuDesktopInactive"
+                            onIcon="pi pi-chevron-right"
+                            offIcon="pi pi-chevron-left"
+                            (click)="layoutService.onMenuToggle()"/>
+            <p-toggleButton *ngIf="layoutService.isOverlay()  && layoutService.isDesktop()"
+                            [(ngModel)]="layoutService.state.overlayMenuActive"
+                            offIcon="pi pi-chevron-right"
+                            onIcon="pi pi-chevron-left"
+                            (click)="layoutService.onMenuToggle()"/>
+            <p-toggleButton *ngIf="!layoutService.isDesktop()"
+                            [(ngModel)]="layoutService.state.staticMenuMobileActive"
+                            offIcon="pi pi-chevron-right"
+                            onIcon="pi pi-chevron-left"
+                            (click)="layoutService.onMenuToggle()"/>
+      </span>
+  <a class="layout-topbar-logo ml-4" routerLink="">
+    <span>ERV</span>
+  </a>
+
+  <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button"
+          (click)="layoutService.showProfileSidebar()">
+    <i class="pi pi-ellipsis-v"></i>
+  </button>
+
+  <div #topbarmenu class="layout-topbar-menu"
+       [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+    <button class="p-link layout-topbar-button" (click)="onConfigButtonClick()" [pTooltip]="'settings' | translate"  tooltipPosition="left">
+      <i class="pi pi-cog"></i>
+      <span>{{ "settings" | translate }}</span>
+    </button>
+
+    <p-menu #languageMenu [model]="languageMenuItems" [popup]="true"></p-menu>
+    <button p-button (click)="languageMenu.toggle($event)" class="p-link layout-topbar-button"
+            [pTooltip]="'language' | translate" tooltipPosition="left">
+      <i class="pi pi-language"></i>
+      <span>{{ "language" | translate }}</span>
+    </button>
+
+    <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
+    <button p-button (click)="userMenu.toggle($event)" class="p-link layout-topbar-button"
+            [pTooltip]="'profile' | translate" tooltipPosition="left">
+      <i class="pi pi-user"></i>
+      <span>{{ "profile" | translate }}</span>
+    </button>
+  </div>
+
+</div>

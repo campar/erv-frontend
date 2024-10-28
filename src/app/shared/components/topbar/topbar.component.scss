@@ -1,0 +1,36 @@
+.menu-toggle-button {
+  border: none;
+  left: 0;
+  position: absolute;
+}
+
+::ng-deep .p-togglebutton.p-button.p-highlight {
+  background: transparent;
+  border: none;
+}
+
+::ng-deep .p-togglebutton.p-button {
+  border: none;
+}
+
+::ng-deep .p-togglebutton.p-button .p-button-icon-left, .p-togglebutton.p-button .p-button-icon-right {
+  color: var(--text-color);
+}
+
+::ng-deep .p-button:focus-visible {
+  border: none;
+  box-shadow: none;
+}
+
+::ng-deep .p-button:focus {
+  border: none;
+  box-shadow: none;
+}
+
+::ng-deep .layout-topbar .p-menu.p-menu-overlay {
+  top: 50px !important; /* Override the dynamically calculated top value */
+  position: fixed !important; /* Fix the menu in place */
+  right: 20px; /* Adjust the position to the right if necessary */
+  z-index: 1000; /* Ensure it appears above other content */
+  display: block !important;
+}
