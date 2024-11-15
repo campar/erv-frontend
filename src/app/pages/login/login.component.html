@@ -1,0 +1,27 @@
+<div class="login-container">
+  <div class="card login-card">
+    <div class="login-logo">
+      <span class="text-4xl font-bold text-primary">ERV</span>
+    </div>
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <!-- Username Input -->
+      <div class="p-fluid">
+        <div class="field">
+          <label for="username">{{ 'username' | translate }}</label>
+          <input id="username" pInputText [formControlName]="'username'" class="w-full"/>
+        </div>
+
+        <!-- Password Input -->
+        <div class="field">
+          <label for="password">{{ 'password' | translate }}</label>
+          <p-password id="password" [formControlName]="'password'" [toggleMask]="true" [feedback]="false"/>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <p-button label="{{ 'signIn' | translate }}" icon="pi pi-sign-in" type="submit" class="align-self-end"
+                [disabled]="!loginForm.valid"></p-button>
+    </form>
+  </div>
+</div>
