@@ -1,0 +1,15 @@
+.section-container {
+    position: relative;
+    padding-top: 10px; /* Adjust this value if needed to make space for the button */
+  }
+  
+  .toggle-button {
+    position: absolute;
+    top: -50px;
+    left: -10px;
+  }
+  
+  .section-content {
+    transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+  

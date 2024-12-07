@@ -1,0 +1,12 @@
+<div class="section-container">
+  <button pButton icon="pi pi-chevron-down" 
+          (click)="toggleSection()" 
+          aria-label="Toggle section" 
+          class="toggle-button mr-2"
+          [outlined]="true"
+          [icon]="isOpen ? 'pi pi-chevron-up' : 'pi pi-chevron-down'">
+  </button>
+  <div [@toggleSection]="isOpen ? 'open' : 'closed'" class="section-content">
+    <ng-content></ng-content>
+  </div>
+</div>
