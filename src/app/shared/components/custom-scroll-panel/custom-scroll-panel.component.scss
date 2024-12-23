@@ -1,0 +1,6 @@
+.custom-scroll-panel {
+  display: flex;
+  //justify-content: center;
+  //align-items: center;
+  overflow: auto; /* Ensures the container is scrollable */
+}

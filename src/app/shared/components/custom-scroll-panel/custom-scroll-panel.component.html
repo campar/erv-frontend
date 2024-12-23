@@ -1,0 +1,4 @@
+<p-button icon="pi pi-refresh" [rounded]="true" [text]="true" (onClick)="centerScroll()" class="align-self-end" />
+<div #scrollContainer class="custom-scroll-panel" [ngStyle]="{'width': scrollWidth, 'height': scrollHeight, 'overflow': 'auto'}">
+  <ng-content></ng-content> <!-- Allows injecting any content inside this component -->
+</div>
