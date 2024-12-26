@@ -1,0 +1,18 @@
+export enum CardType {
+  PERSONAL = 'PERSONAL',
+  TEMPORARY = 'TEMPORARY',
+}
+
+export enum ActionType {
+  CHECK_IN = 'CHECK_IN',
+  CHECK_OUT = 'CHECK_OUT',
+  PAUSE_START = 'PAUSE_START',
+  PAUSE_END = 'PAUSE_END',
+  BUSINESS_START = 'BUSINESS_START',
+  BUSINESS_END = 'BUSINESS_END',
+}
+
+export enum UserType {
+  ADMIN = "ADMIN",
+  EMPLOYEE = "EMPLOYEE",
+}
