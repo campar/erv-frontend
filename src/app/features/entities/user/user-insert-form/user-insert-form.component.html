@@ -1,0 +1,267 @@
+<p-stepper [linear]="true">
+  <p-stepperPanel [header]="'user.employee_form_part' | translate">
+    <ng-template pTemplate="content" let-nextCallback="nextCallback">
+      <div class="flex flex-column">
+        <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" class="grid mt-4">
+          <div class="formgroup-inline align-items-center">
+            <div *ngFor="let attr of UserFormUtils.nonAdminAttributes(this.attributes)" class="field mb-5 p-fluid">
+              <ng-container *ngIf="attr.inputField?.isInput()">
+                <div class="flex flex-column m-1">
+                  <p-floatLabel>
+                    <input pInputText id="{{attr.attr_name}}" type="{{attr.type}}"
+                           [formControlName]="attr.attr_name"
+                           [minlength]="attr.inputField?._minLength"
+                           [maxlength]="attr.inputField?._maxLength"
+                           class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"/>
+                    <label
+                      for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                  </p-floatLabel>
+                </div>
+              </ng-container>
+
+              <!-- Date Input -->
+              <ng-container *ngIf="AppUtils.isDateInput(attr.type) && attr.inputField?.isCalendar()">
+                <div class="flex flex-column m-1">
+                  <p-floatLabel>
+                    <p-calendar [formControlName]="attr.attr_name"
+                                [iconDisplay]="'input'"
+                                [showIcon]="true"
+                                class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                                [showButtonBar]="true">
+                    </p-calendar>
+                    <label
+                      for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                  </p-floatLabel>
+                </div>
+              </ng-container>
+
+              <!-- DateTime Input -->
+              <ng-container *ngIf="AppUtils.isDateTimeInput(attr.type) && attr.inputField?.isCalendar()">
+                <div class="flex flex-column m-1">
+                  <p-floatLabel>
+                    <p-calendar [formControlName]="attr.attr_name"
+                                [iconDisplay]="'input'"
+                                [showIcon]="true"
+                                [showTime]="true"
+                                [hourFormat]="'24'"
+                                class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                                [showButtonBar]="true">
+                    </p-calendar>
+                    <label
+                      for="{{attr.attr_name}}">{{ AppUtils.toFirstLetterLowercase(entity) + '.' + attr.attr_name | translate }}</label>
+                  </p-floatLabel>
+                </div>
+              </ng-container>
+
+              <!-- Checkbox Input -->
+              <ng-container *ngIf="attr.inputField?.isCheckbox()">
+                <div class="flex flex-column m-1">
+                  <p-floatLabel>
+                    <p-checkbox
+                      label="{{ AppUtils.toFirstLetterLowercase(entity) + '.' + attr.attr_name | translate }}"
+                      [formControlName]="attr.attr_name"
+                      [binary]="true"
+                      class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                      inputId="{{attr.attr_name}}">
+                    </p-checkbox>
+                    <label
+                      for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                  </p-floatLabel>
+                </div>
+              </ng-container>
+
+              <!-- Enum -->
+              <ng-container *ngIf="AppUtils.isEnum(attr.type)">
+                <div class="flex flex-column m-1">
+                  <p-floatLabel>
+                    <p-dropdown [options]="getEnumOptions(attr.attr_name)"
+                                [formControlName]="attr.attr_name"
+                                class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                                showClear="true"
+                                [virtualScroll]="true"
+                                [virtualScrollItemSize]="35"/>
+                    <label
+                      for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                  </p-floatLabel>
+                </div>
+              </ng-container>
+
+              <!-- TreeSelect Input -->
+              <ng-container *ngIf="attr.isForeignKey() && attr.inputField?.isTreeSelect()">
+                <div class="flex flex-column m-1">
+                  <p-floatLabel>
+                    <p-treeSelect [formControlName]="attr.attr_name"
+                                  [options]="options.get(attr.attr_name)"
+                                  class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-invalid ng-dirty' : ''}} tree-width"
+                                  display="chip"
+                                  filter="true"
+                                  showClear="true"
+                                  [selectionMode]="attr.inputField?._multiSelect? 'multiple': 'single'">
+                      <ng-container *ngIf="!attr.inputField?._multiSelect">
+                        <ng-template pTemplate="value" let-node>
+                          <span class="p-treeselect-label p-chip">{{ node?.label }}</span>
+                        </ng-template>
+                      </ng-container>
+                    </p-treeSelect>
+                    <label
+                      for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                  </p-floatLabel>
+                </div>
+              </ng-container>
+
+              <!-- Dropdown Input -->
+              <ng-container *ngIf="attr.isForeignKey() && attr.inputField?.isDropdown() && !attr.inputField?._multiSelect">
+                <div class="flex flex-column m-1">
+                  <p-floatLabel>
+                    <p-dropdown [options]="options.get(attr.attr_name)"
+                                [formControlName]="attr.attr_name"
+                                [checkmark]="true"
+                                class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                                showClear="true"
+                                [virtualScroll]="true"
+                                [virtualScrollItemSize]="35"
+                                [filter]="true"
+                                filterBy="label"
+                                optionValue="data">
+                    </p-dropdown>
+                    <label
+                      for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                  </p-floatLabel>
+                </div>
+              </ng-container>
+
+              <!-- Dropdown Multiselect Input -->
+              <ng-container
+                *ngIf="attr.isForeignKey() && attr.inputField?.isDropdown() && attr.inputField?._multiSelect">
+                <div class="flex flex-column m-1">
+                  <p-floatLabel>
+                    <p-multiSelect [options]="options.get(attr.attr_name)"
+                                   [formControlName]="attr.attr_name"
+                                   class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                                   [showClear]="true"
+                                   [virtualScroll]="true"
+                                   [virtualScrollItemSize]="35"
+                                   [filter]="true"
+                                   filterBy="label"
+                                   optionValue="data">
+                    </p-multiSelect>
+                    <label
+                      for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                  </p-floatLabel>
+                </div>
+              </ng-container>
+
+            </div>
+          </div>
+        </form>
+      </div>
+      <ng-container *ngIf="!isEmployee">
+        <p-divider></p-divider>
+        <div class="flex flex-column">
+          <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" class="grid mt-4">
+            <div class="formgroup-inline align-items-center">
+              <div *ngFor="let attr of UserFormUtils.adminAttributes(this.attributes)" class="field mb-5 p-fluid">
+                <ng-container *ngIf="attr.inputField?.isInput() && attr.attr_name !== 'password'">
+                  <div class="flex flex-column m-1">
+                    <p-floatLabel>
+                      <input pInputText id="{{attr.attr_name}}" type="{{attr.type}}"
+                             [formControlName]="attr.attr_name"
+                             class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"/>
+                      <label
+                        for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                    </p-floatLabel>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="attr.isForeignKey() && attr.inputField?.isTreeSelect()">
+                  <div class="flex flex-column m-1">
+                    <p-floatLabel>
+                      <p-treeSelect [formControlName]="attr.attr_name"
+                                    [options]="options.get(attr.attr_name)"
+                                    class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}} tree-width"
+                                    display="chip"
+                                    filter="true"
+                                    showClear="true"
+                                    [selectionMode]="attr.inputField?._multiSelect? 'multiple': 'single'">
+                        <ng-container *ngIf="!attr.inputField?._multiSelect">
+                          <ng-template pTemplate="value" let-node>
+                            <span class="p-treeselect-label p-chip">{{ node?.label }}</span>
+                          </ng-template>
+                        </ng-container>
+                      </p-treeSelect>
+                      <label
+                        for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                    </p-floatLabel>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="attr.inputField?.isInput() && attr.attr_name === 'password'">
+                  <div class="flex flex-column m-1">
+                    <p-floatLabel>
+                      <p-password inputId="password"
+                                  id="password"
+                                  formControlName="password"
+                                  [toggleMask]="true"
+                                  promptLabel="{{'password_strength' | translate}}"
+                                  weakLabel="{{'too_simple' | translate}}"
+                                  mediumLabel="{{'average_complexity' | translate}}"
+                                  strongLabel="{{'complex_password' | translate}}"
+                                  class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}">
+                        <ng-template pTemplate="footer">
+                          <p-divider/>
+                          <p class="mt-2">{{ 'password_conditions' | translate }}</p>
+                          <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                            <li>{{ 'at_least_one_lowercase' | translate }}</li>
+                            <li>{{ 'at_least_one_uppercase' | translate }}</li>
+                            <li>{{ 'at_least_one_numeric' | translate }}</li>
+                            <li>{{ 'at_least_one_special_character' | translate }}</li>
+                            <li>{{ 'minimum_8_characters' | translate }}</li>
+                          </ul>
+                        </ng-template>
+                      </p-password>
+                      <label for="password">{{ getPlaceholder(attr) }}</label>
+                    </p-floatLabel>
+                  </div>
+                </ng-container>
+                <!-- Dropdown Input -->
+                <ng-container *ngIf="attr.isForeignKey() && attr.inputField?.isDropdown()">
+                  <div class="flex flex-column m-1">
+                    <p-floatLabel>
+                      <p-dropdown [options]="options.get(attr.attr_name)"
+                                  [formControlName]="attr.attr_name"
+                                  [checkmark]="true"
+                                  class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                                  showClear="true"
+                                  [virtualScroll]="true"
+                                  [virtualScrollItemSize]="35"
+                                  [filter]="true"
+                                  optionValue="data"
+                                  filterBy="label">
+                      </p-dropdown>
+                      <label
+                        for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                    </p-floatLabel>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </form>
+        </div>
+      </ng-container>
+      <div class="flex pt-4 justify-content-end mt-3">
+        <p-button
+          [loading]="formSubmitting"
+          [disabled]="!form?.valid && formSubmitting"
+          label="{{'save' | translate}}"
+          icon="pi pi-save"
+          iconPos="right"
+          (onClick)="onSubmit(false, nextCallback)"/>
+      </div>
+    </ng-template>
+  </p-stepperPanel>
+  <p-stepperPanel [header]="'user.card' | translate">
+    <ng-template pTemplate="content">
+      <div class="flex flex-column">
+        <app-card-attachment-form [user]="createdUser"></app-card-attachment-form>
+      </div>
+    </ng-template>
+  </p-stepperPanel>
+</p-stepper>
