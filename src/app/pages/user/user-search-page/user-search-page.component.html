@@ -1,0 +1,38 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-2 py-0 mb-4 flex flex-row justify-content-between align-items-center">
+      <app-breadcrumb></app-breadcrumb>
+      <div *ngIf="items && items.length > 0">
+        <p-menu #menu [model]="items" [popup]="true"/>
+        <p-button (onClick)="menu.toggle($event)" [rounded]="true" [text]="true" icon="pi pi-ellipsis-v"/>
+        <p-dialog [(visible)]="displayDialog" header="{{'import_csv' | translate}}" [modal]="true" [closable]="true">
+          <div class="p-fluid">
+            <div class="p-field">
+              <label for="csvFile">{{ 'csv_please_upload' | translate }}</label>
+              <input id="csvFile" class="mt-2" type="file" (change)="onFileSelected($event)" accept=".csv" pInputText/>
+            </div>
+            <p-progressBar
+              *ngIf="showLoader"
+              mode="indeterminate"
+              [style]="{ height: '6px' }"
+            />
+          </div>
+          <!--          upload dialog-->
+          <ng-template pTemplate="footer">
+            <p-button label="{{'cancel' | translate}}" icon="pi pi-times" (onClick)="displayDialog = false"
+                      class="p-button-text"></p-button>
+            <p-button label="{{'import' | translate }}" icon="pi pi-upload" [disabled]="!selectedFile"
+                      (onClick)="onUpload()"></p-button>
+          </ng-template>
+        </p-dialog>
+        <!--        -->
+      </div>
+    </div>
+    <div class="card px-6 py-6">
+      <div class="mb-4">
+        <app-user-search-form [structure]="structure"></app-user-search-form>
+      </div>
+      <app-user-table-view [structure]="structure" [tableAttributes]="tableAttributes"></app-user-table-view>
+    </div>
+  </div>
+</div>
