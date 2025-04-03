@@ -1,0 +1,119 @@
+<form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()" class="grid mt-4">
+  <div class="formgroup-inline align-items-center">
+    <div *ngFor="let attr of attributes" class="field mb-5 p-fluid">
+      <ng-container *ngIf="attr.inputField?.isInput()">
+        <div class="flex flex-column m-1">
+          <p-floatLabel>
+            <input pInputText id="{{attr.attr_name}}" type="{{attr.type}}"
+                   [formControlName]="attr.attr_name"
+                   class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"/>
+            <label
+              for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+          </p-floatLabel>
+        </div>
+      </ng-container>
+
+      <!-- Date Input -->
+      <ng-container *ngIf="AppUtils.isDateInput(attr.type)">
+        <div class="flex flex-column m-1">
+          <p-floatLabel>
+            <p-calendar [formControlName]="attr.attr_name"
+                        [iconDisplay]="'input'"
+                        [maxDate]="attr.inputField?._maxLength"
+                        [minDate]="attr.inputField?._minLength"
+                        [showIcon]="true"
+                        class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                        [showButtonBar]="true">
+            </p-calendar>
+            <label
+              for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+          </p-floatLabel>
+        </div>
+      </ng-container>
+
+      <!-- DateTime Input -->
+      <ng-container *ngIf="AppUtils.isDateTimeInput(attr.type)">
+        <div class="flex flex-column m-1">
+          <p-floatLabel>
+            <p-calendar [formControlName]="attr.attr_name"
+                        [iconDisplay]="'input'"
+                        [maxDate]="attr.inputField?._maxLength"
+                        [minDate]="attr.inputField?._minLength"
+                        [showIcon]="true"
+                        [showTime]="true"
+                        [hourFormat]="'24'"
+                        class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                        [showButtonBar]="true">
+            </p-calendar>
+            <label
+              for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+          </p-floatLabel>
+        </div>
+      </ng-container>
+
+      <!-- Checkbox Input -->
+      <ng-container *ngIf="AppUtils.isBoolean(attr.type)">
+        <div class="flex flex-column m-1">
+          <p-checkbox label="{{ getPlaceholder(attr) }}"
+                      [formControlName]="attr.attr_name"
+                      [binary]="true"
+                      class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                      inputId="{{attr.attr_name}}">
+          </p-checkbox>
+        </div>
+      </ng-container>
+
+      <!-- Enum -->
+      <ng-container *ngIf="AppUtils.isEnum(attr.type)">
+        <div class="flex flex-column m-1">
+          <p-floatLabel>
+            <p-dropdown [options]="getEnumOptions(attr.attr_name)"
+                        [formControlName]="attr.attr_name"
+                        class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                        showClear="true"
+                        [virtualScroll]="true"
+                        [virtualScrollItemSize]="35"/>
+            <label
+              for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+          </p-floatLabel>
+        </div>
+      </ng-container>
+
+      <!-- Dropdown Input -->
+      <ng-container
+        *ngIf="attr.isForeignKey() && !attr.inputField?._multiSelect && !attr.inputField?.isPickList()">
+        <div class="flex flex-column m-1">
+          <p-floatLabel>
+            <p-dropdown [options]="options.get(attr.attr_name)"
+                        [formControlName]="attr.attr_name"
+                        class="{{form.get(attr.attr_name)?.touched && form.get(attr.attr_name)?.invalid? 'ng-dirty ng-invalid' : ''}}"
+                        showClear="true"
+                        [virtualScroll]="true"
+                        [virtualScrollItemSize]="35"
+                        [filter]="true"
+                        filterBy="{{AppUtils.getFkSearchAttribute(attr.type)}}">
+              <ng-template pTemplate="selectedItem" let-item>
+                <div>{{ AppUtils.getDisplayValue(item, attr.type) }}</div>
+              </ng-template>
+              <ng-template let-item pTemplate="item">
+                <div>{{ AppUtils.getDisplayValue(item, attr.type) }}</div>
+              </ng-template>
+            </p-dropdown>
+            <label
+              for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+          </p-floatLabel>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="flex w-full justify-content-between mx-3">
+    <p-button
+      [loading]="formSubmitting"
+      [disabled]="formSubmitting"
+      [outlined]="true"
+      label="{{'users' | translate}}"
+      icon="pi pi-arrow-left"
+      (onClick)="router.navigate(['/user']).then()"/>
+    <button pButton icon="pi pi-save" iconPos="right" label="{{'save' | translate}}"></button>
+  </div>
+</form>
