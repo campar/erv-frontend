@@ -1,0 +1,54 @@
+.online {
+  display: block;
+  width: 8px;
+  height: 8px;
+  background-color: green;
+  border-radius: 100%;
+  align-self: center;
+}
+
+:host ::ng-deep .p-organizationchart-node-content {
+  border-radius: 10%;
+  padding: 0.8rem;
+  font-size: 0.8rem; /* Smaller font size */
+  height: 100%
+}
+
+/* Reduce connector spacing */
+:host ::ng-deep .p-organizationchart-lines {
+  padding: 0.25rem 0; /* Adjust line spacing */
+}
+
+:host ::ng-deep .p-tabview-nav > li > a {
+  padding: 0.5rem 3rem
+}
+
+:host ::ng-deep .p-tabview-nav-content {
+  margin-bottom: 2rem;
+}
+
+.float-label-container-copy {
+  display: block;
+  position: relative;
+}
+
+.float-label-copy {
+  position: absolute;
+  pointer-events: none;
+  margin-top: -0.5rem;
+  transition-property: all;
+  transition-timing-function: ease;
+  line-height: 1;
+  top: -0.75rem;
+  left: 0.75rem;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--surface-d) inset;
+}
+
+::ng-deep input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--surface-d) inset;
+}

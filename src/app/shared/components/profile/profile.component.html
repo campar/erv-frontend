@@ -1,0 +1,132 @@
+<div *ngIf="user" class="grid mb-1">
+  <div class="col-12">
+    <div class="card p-4 mb-4 flex flex-row justify-content-start align-items-center">
+      <p-avatar label="{{user.firstName?.substring(0, 1)}}{{user.lastName?.substring(0, 1)}}"
+                styleClass="mr-2"
+                size="large"/>
+      <div class="flex flex-column ml-2">
+        <div class="font-semibold text-lg flex flex-row">
+          {{ user.firstName + " " + user.lastName }}
+          <span class="online ml-2"></span>
+        </div>
+        <div>&#64;{{ user.username }}</div>
+      </div>
+    </div>
+    <div class="card p-4 mb-4 flex flex-column justify-content-center align-items-start">
+      <p-tabView class="w-full">
+        <p-tabPanel header="{{'overview' | translate }}">
+          <div>
+            <div class="font-semibold text-base mb-2">
+              {{ 'roles' | translate }}
+            </div>
+            <p-tag value="{{user.role?.name}}"/>
+          </div>
+
+          <div class="w-full flex flex-column mt-4">
+            <div class="font-semibold text-base mb-2">
+              {{ 'department_unit' | translate }}
+            </div>
+            <app-custom-scroll-panel class="card p-4 mb-4 flex flex-column surface-50" [scrollWidth]="'100%'"
+                                  [scrollHeight]="'20rem'">
+              <p-organizationChart [value]="departmentUnit">
+                <ng-template let-node pTemplate="DepartmentUnit">
+                  <div class="p-2 text-center">
+                    <div class="font-bold">
+                      {{ node.label }}
+                    </div>
+                  </div>
+                </ng-template>
+              </p-organizationChart>
+            </app-custom-scroll-panel>
+          </div>
+
+          <div class="w-full flex flex-row mt-4">
+            <div class="card flex-1 mr-2 p-3">
+              <div class="font-semibold text-base mb-2">
+                {{ 'date_joined' | translate }}
+              </div>
+              {{ user.creationDate | date: 'dd.MM.yyyy.' }}
+            </div>
+            <div class="card flex-1 p-3">
+              <div class="font-semibold text-base mb-2">
+                {{ 'last_edited' | translate }}
+              </div>
+              {{ user.modifyDate | date: 'dd.MM.yyyy.' }}
+            </div>
+          </div>
+        </p-tabPanel>
+        <p-tabPanel header="{{'settings' | translate}}">
+          <div class="formgroup-inline align-items-center">
+            <div *ngFor="let attr of personalSettingsAttributes" class="field mb-5 p-fluid">
+              <div class="flex flex-column m-1">
+                <p-floatLabel>
+                  <input pInputText id="{{attr.attr_name}}" type="{{attr.type}}"
+                         [disabled]="true"
+                         value="{{getUserAttributeValue(attr)}}"/>
+                  <label for="{{attr.attr_name}}">{{ getPlaceholder(attr) }}</label>
+                </p-floatLabel>
+              </div>
+            </div>
+          </div>
+          <p-divider class="mb-2"/>
+          <form *ngIf="passwordForm" [formGroup]="passwordForm" (submit)="onSubmitPasswordForm()">
+            <div class="formgroup-inline align-items-center mt-5">
+              <div class="field mt-5 p-fluid">
+                <div class="flex flex-column m-1">
+                  <div class="float-label-container-copy">
+                    <label class="float-label-copy" for="currentPassword">{{ 'current_password' | translate }}*</label>
+                    <p-password id="currentPassword" [formControlName]="'currentPassword'" [toggleMask]="true"
+                                [feedback]="false"
+                                [class]="passwordForm.touched && passwordForm.invalid? 'ng-invalid ng-dirty' : ''"/>
+                  </div>
+                </div>
+              </div>
+              <div class="field mt-5 p-fluid">
+                <div class="flex flex-column m-1">
+                  <div class="float-label-container-copy">
+                    <label class="float-label-copy" for="newPassword">{{ 'new_password' | translate }}*</label>
+                    <p-password id="newPassword"
+                                promptLabel="{{'password_strength' | translate}}"
+                                weakLabel="{{'too_simple' | translate}}"
+                                mediumLabel="{{'average_complexity' | translate}}"
+                                strongLabel="{{'complex_password' | translate}}"
+                                [formControlName]="'newPassword'"
+                                [toggleMask]="true"
+                                [class]="passwordForm.touched && passwordForm.invalid? 'ng-invalid ng-dirty' : ''">
+                      <ng-template pTemplate="header">
+                        <h6>{{ 'choose_a_password' | translate }}</h6>
+                      </ng-template>
+                      <ng-template pTemplate="footer">
+                        <p-divider/>
+                        <p class="mt-2">{{ 'password_conditions' | translate }}</p>
+                        <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                          <li>{{ 'at_least_one_lowercase' | translate }}</li>
+                          <li>{{ 'at_least_one_uppercase' | translate }}</li>
+                          <li>{{ 'at_least_one_numeric' | translate }}</li>
+                          <li>{{ 'at_least_one_special_character' | translate }}</li>
+                          <li>{{ 'minimum_8_characters' | translate }}</li>
+                        </ul>
+                      </ng-template>
+                    </p-password>
+                  </div>
+                </div>
+              </div>
+              <div class="field mt-5 p-fluid">
+                <div class="flex flex-column m-1">
+                  <div class="float-label-container-copy">
+                    <label class="float-label-copy" for="confirmPassword">{{ 'confirm_password' | translate }}*</label>
+                    <p-password id="confirmPassword" [formControlName]="'confirmPassword'" [toggleMask]="true"
+                                [feedback]="false"
+                                [class]="passwordForm.touched && passwordForm.invalid? 'ng-invalid ng-dirty' : ''"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p-button class="flex justify-content-end" label="{{'update' | translate}}" icon="pi pi-save"
+                      type="submit"></p-button>
+          </form>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+  </div>
+</div>
