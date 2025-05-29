@@ -1,0 +1,101 @@
+<!-- chart-display.component.html -->
+<div [ngSwitch]="chartType" #containerRef>
+  <ngx-charts-bar-vertical
+    [view]="[containerRef.offsetWidth, containerRef.offsetHeight]"
+    *ngSwitchCase="ChartType.BarVertical"
+    [results]="data[0].series"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [wrapTicks]="wrapTicks"
+    (select)="onSelect($event)"
+  >
+  </ngx-charts-bar-vertical>
+
+  <ngx-charts-bar-horizontal
+    [view]="[containerRef.offsetWidth, containerRef.offsetHeight]"
+    *ngSwitchCase="ChartType.BarHorizontal"
+    [results]="data[0].series"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    (select)="onSelect($event)"
+  >
+  </ngx-charts-bar-horizontal>
+
+  <ngx-charts-pie-chart
+    [view]="[containerRef.offsetWidth, containerRef.offsetHeight]"
+    *ngSwitchCase="ChartType.Pie"
+    [results]="data"
+    [gradient]="gradient"
+    [legend]="showLegend"
+    [labels]="true"
+    [doughnut]="false"
+    (select)="onSelect($event)"
+  >
+  </ngx-charts-pie-chart>
+
+  <ngx-charts-advanced-pie-chart
+    [view]="[containerRef.offsetWidth, containerRef.offsetHeight]"
+    *ngSwitchCase="ChartType.AdvancedPie"
+    [results]="data"
+    [gradient]="gradient"
+    (select)="onSelect($event)"
+  >
+  </ngx-charts-advanced-pie-chart>
+
+  <ngx-charts-pie-grid
+    [view]="[containerRef.offsetWidth, containerRef.offsetHeight]"
+    *ngSwitchCase="ChartType.PieGrid"
+    [results]="data"
+    [label]="translationService.translate('total')"
+    (select)="onSelect($event)"
+  >
+  </ngx-charts-pie-grid>
+
+  <ngx-charts-line-chart
+    [view]="[containerRef.offsetWidth, containerRef.offsetHeight]"
+    *ngSwitchCase="ChartType.Line"
+    [results]="data"
+    [gradient]="true"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [wrapTicks]="wrapTicks"
+    (select)="onSelect($event)"
+    [timeline]="timeline"
+  >
+  </ngx-charts-line-chart>
+
+  <ngx-charts-area-chart
+    [view]="[containerRef.offsetWidth, containerRef.offsetHeight]"
+    *ngSwitchCase="ChartType.Area"
+    [results]="data"
+    [gradient]="true"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    (select)="onSelect($event)"
+    [timeline]="timeline"
+    [curve]="curve"
+  >
+  </ngx-charts-area-chart>
+</div>
