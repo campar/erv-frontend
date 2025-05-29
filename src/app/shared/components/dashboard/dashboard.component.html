@@ -1,0 +1,245 @@
+<div class="grid">
+  <div class="col-12 lg:col-6 xl:col-3">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">{{ "total_not_checked_out" | translate }}</span>
+          <div *ngIf="data" class="text-900 font-medium text-xl">
+            {{ data.actionCount.checkInCount - data.actionCount.checkOutCount }}
+          </div>
+          <p-skeleton *ngIf="!data" height="1.5rem"></p-skeleton>
+        </div>
+        <button
+          class="flex align-items-center justify-content-center bg-blue-100 cursor-pointer hover:bg-blue-200 border-none"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+          [routerLink]="'/dailyReport'"
+          [pTooltip]="translationService.translate('daily_report')">
+          <i class="pi pi-calendar-clock text-blue-500 text-xl"></i>
+        </button>
+      </div>
+      <span *ngIf="data" class="text-500">{{ 'total_checkins' | translate }}</span>
+      <span *ngIf="data" class="text-green-500 font-medium"> {{ data.actionCount.checkInCount }}</span>
+      <p-skeleton *ngIf="!data" height="1.5rem"></p-skeleton>
+    </div>
+  </div>
+
+  <div class="col-12 lg:col-6 xl:col-3">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">{{ "present_employees" | translate }}</span>
+          <div *ngIf="data" class="text-900 font-medium text-xl">
+            {{ data.presentEmployeesCount - data.employeesOnPauseCount - data.employeesOnBusinessTripCount }}
+          </div>
+          <p-skeleton *ngIf="!data" height="1.5rem"></p-skeleton>
+        </div>
+        <button
+          class="flex align-items-center justify-content-center bg-orange-100 border-round cursor-pointer hover:bg-orange-200 border-none"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+          [routerLink]="'/absenceReport'"
+          [pTooltip]="translationService.translate('attendance_report')">
+          <i class="pi pi-users text-orange-500 text-xl"></i>
+        </button>
+      </div>
+      <span *ngIf="data" class="text-500">{{ 'total_on_job' | translate }}</span>
+      <span *ngIf="data" class="text-green-500 font-medium"> {{ data.presentEmployeesCount }}</span>
+      <p-skeleton *ngIf="!data" height="1.5rem"></p-skeleton>
+    </div>
+  </div>
+
+  <div class="col-12 lg:col-6 xl:col-3">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">{{
+              "employees_on_pause" | translate
+            }}</span>
+          <div *ngIf="data" class="text-900 font-medium text-xl">
+            {{ data.employeesOnPauseCount }}
+          </div>
+          <p-skeleton *ngIf="!data" height="1.5rem"></p-skeleton>
+        </div>
+        <button
+          class="flex align-items-center justify-content-center bg-cyan-100 border-round cursor-pointer hover:bg-cyan-200 border-none"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+          [routerLink]="'/workPause'"
+          [pTooltip]="translationService.translate('pause_report')"
+        >
+          <i class="pi pi-pause text-cyan-500 text-xl"></i>
+        </button>
+      </div>
+      <span *ngIf="data" class="text-500">{{ 'total_pauses' | translate }}</span>
+      <span *ngIf="data" class="text-green-500 font-medium"> {{ data.actionCount.pauseStartCount }}</span>
+      <p-skeleton *ngIf="!data" height="1.5rem"></p-skeleton>
+    </div>
+  </div>
+
+  <div class="col-12 lg:col-6 xl:col-3">
+    <div class="card mb-0">
+      <div class="flex justify-content-between mb-3">
+        <div>
+          <span class="block text-500 font-medium mb-3">{{
+              "employees_on_trip" | translate
+            }}</span>
+          <div *ngIf="data" class="text-900 font-medium text-xl">
+            {{ data.employeesOnBusinessTripCount }}
+          </div>
+          <p-skeleton *ngIf="!data" height="1.5rem"></p-skeleton>
+        </div>
+        <button
+          class="flex align-items-center justify-content-center bg-purple-100 cursor-pointer hover:bg-purple-200 border-none"
+          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+          [routerLink]="'/leavingArrival'"
+          [pTooltip]="translationService.translate('delays_departures')">
+          <i class="pi pi-send text-purple-500 text-xl"></i>
+        </button>
+      </div>
+      <span *ngIf="data" class="text-500">{{ 'total_business_outs' | translate }}</span>
+      <span *ngIf="data" class="text-green-500 font-medium"> {{ data.actionCount.businessStartCount }}</span>
+      <p-skeleton *ngIf="!data" height="1.5rem"></p-skeleton>
+    </div>
+  </div>
+
+  <div class="col-12 lg:col-6">
+    <div class="card">
+      <h5>{{ "recent_actions" | translate }}</h5>
+      <div class="chart-container" style="max-height: 400px; overflow-y: auto">
+        <span>
+          <p-table
+            #dt1
+            [paginator]="true"
+            [rows]="rows"
+            [totalRecords]="totalRecords"
+            (onPage)="onPageChange($event)"
+            [lazy]="true"
+            [value]="dataSource"
+            dataKey="id"
+            rowGroupMode="rowspan"
+            [loading]="false"
+            [rowHover]="true"
+            [scrollable]="true"
+            [globalFilterFields]="[]"
+            responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+              <tr>
+                <th id="employees">
+                  <div
+                    class="flex justify-content-between align-items-center"
+                    style="white-space: nowrap">
+                    {{ "employees" | translate }}
+                  </div>
+                </th>
+                <th id="action">
+                  <div
+                    class="flex justify-content-between align-items-center"
+                    style="white-space: nowrap">
+                    {{ "action" | translate }}
+                  </div>
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dataSource>
+              <tr>
+                <td>
+                  <p-skeleton *ngIf="loading"/>
+                  <span *ngIf="!loading">
+                    <span
+                      *ngIf="!loading"
+                      class="font-bold ml-2"
+                      style="white-space: nowrap"
+                    >{{ dataSource.user.firstName }}
+                      {{ dataSource.user.parentName }}
+                      {{ dataSource.user.lastName }}</span
+                    >
+                  </span>
+                </td>
+                <td style="padding: 0">
+                  <p-skeleton *ngIf="loading"/>
+                  <p-table
+                    *ngIf="!loading"
+                    [value]="dataSource.timetableInfo"
+                    class="nested-table"
+                    styleClass="p-datatable-sm p-datatable-gridlines"
+                  >
+                    <ng-template pTemplate="body" let-timetable>
+                      <tr>
+                        <td style="white-space: nowrap; min-width: 20rem">
+                          {{ timetable.dateTime | date : "HH:mm:ss" }}
+                          <strong>{{
+                              timetable?.actionType | translate
+                            }}</strong>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr *ngFor="let i of [1, 2, 3, 4, 5]">
+                  <td *ngIf="!data">
+                    <p-skeleton width="100%" height="20px"/>
+                  </td>
+                  <td *ngIf="!data">
+                    <p-skeleton width="100%" height="20px"/>
+                  </td>
+                </tr>
+              <tr *ngIf="data">
+                <td colspan="8">{{ 'noData' | translate }}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+              <tr>
+                <td colspan="8">{{ 'loading' | translate }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 lg:col-6">
+    <div class="card">
+      <h5>{{ "registered_actions_last_24h" | translate }}</h5>
+      <span *ngIf="!data?.actionCount">
+        <div class="grid">
+        <div class="col-12 lg:col-6 xl:col-3" style="margin: 15px 15px 15px 20px;">
+          <p-skeleton shape="circle" size="10rem"/>
+        </div>
+        <div class="col-12 lg:col-6 xl:col-3" style="margin: 15px;">
+          <p-skeleton shape="circle" size="10rem"/>
+        </div>
+        <div class="col-12 lg:col-6 xl:col-3" style="margin: 15px;">
+          <p-skeleton shape="circle" size="10rem"/>
+        </div>
+        <div class="col-12 lg:col-6 xl:col-3" style="margin: 15px 15px 15px 20px;">
+          <p-skeleton shape="circle" size="10rem"/>
+        </div>
+        <div class="col-12 lg:col-6 xl:col-3" style="margin: 15px;">
+          <p-skeleton shape="circle" size="10rem"/>
+        </div>
+        <div class="col-12 lg:col-6 xl:col-3" style="margin: 15px;">
+          <p-skeleton shape="circle" size="10rem"/>
+        </div>
+        </div>
+      </span>
+      <app-chart
+        *ngIf="data?.actionCount"
+        [data]="chartData"
+        [properties]="chartProperties"
+        [chartType]="chartType"
+      ></app-chart>
+    </div>
+  </div>
+  <div class="col-12 xl:col-12" style="margin-top: -2rem;">
+    <div class="card">
+      <app-chart
+        [data]="pressenceChartData"
+        [properties]="pressenceChartProperties"
+        [chartType]="pressenceChartType"
+        [timeline]='true'
+      ></app-chart>
+    </div>
+  </div>
+</div>
