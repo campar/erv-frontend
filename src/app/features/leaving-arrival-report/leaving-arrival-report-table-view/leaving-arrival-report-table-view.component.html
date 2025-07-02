@@ -1,0 +1,148 @@
+<div class="grid">
+  <div class="col-12">
+    <button
+      pButton
+      [disabled]="!page || this.dataSource.length <= 0"
+      label="{{'download_pdf' | translate}}"
+      class="p-button-outlined mb-2"
+      [loading]="showLoader"
+      icon="{{'pi pi-download'}}"
+      (click)="downloadPDF()">
+    </button>
+    <button
+      pButton
+      [disabled]="!page || this.dataSource.length <= 0"
+      label="{{'download_csv' | translate}}"
+      class="p-button-outlined mb-2 ml-2"
+      [loading]="showLoader"
+      icon="{{'pi pi-download'}}"
+      (click)="downloadCsv()">
+    </button>
+    <p-table #dt1
+             [paginator]="true"
+             [rows]="page?.size"
+             [totalRecords]="totalRecords"
+             [rowsPerPageOptions]="[10, 25, 50, 100]"
+             [lazy]="true"
+             (onPage)="onPageChange($event)"
+             (onSort)="onSortChange($event)"
+             [value]="dataSource"
+             dataKey="id"
+             rowGroupMode="rowspan"
+             [loading]="false"
+             [rowHover]="true"
+             styleClass="p-datatable-gridlines  p-datatable-striped p-datatable-sm"
+             [globalFilterFields]="[]"
+             responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th id="{{attribute.attr_name}}"
+              [pSortableColumn]="['departmentUnit', 'user'].includes(attribute.attr_name)? attribute.attr_name : ''"
+              *ngFor="let attribute of attributes">
+            <div class="flex justify-content-start align-items-center" style="white-space: nowrap;">
+              {{ AppUtils.toFirstLetterLowercase(entity) + "." + attribute.attr_name | translate }}
+              <p-sortIcon *ngIf="['departmentUnit', 'user'].includes(attribute.attr_name)"
+                          [field]="attribute.attr_name"/>
+              <!-- <p-columnFilter type="text" [field]="attribute.attr_name" display="menu" [placeholder]="'Search by ' + attribute.attr_name | translate"></p-columnFilter> -->
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-dataSource>
+        <tr>
+          <td>
+            <p-skeleton *ngIf="loading"/>
+            <span *ngIf="!loading" class="font-bold ml-2" style="white-space: nowrap;">{{ dataSource.user }}</span>
+          </td>
+          <td>
+            <p-skeleton *ngIf="loading"/>
+            <span *ngIf="!loading" class="detail-item" style="min-width: 30rem;">{{ dataSource.departmentUnit }}</span>
+          </td>
+          <td>
+            <p-skeleton *ngIf="loading"/>
+            <span *ngIf="!loading">
+                <div class="detail-row" *ngFor="let shift of dataSource.shifts">
+                  <div class="detail-item"
+                       style="white-space: nowrap;">{{ AppUtils.getEntityViewValue(shift, "Shift", " - ") }}</div>
+                </div>
+              </span>
+          </td>
+          <td style="text-align: center;">
+            <p-skeleton *ngIf="loading"/>
+            <span *ngIf="!loading" class="detail-item"
+                  style="white-space: nowrap; min-width: 20rem; font-weight: bold;" [style]="dataSource.faultsCount === 0 ? 'color: var(--green-500)': 'color: var(--red-500)'">{{ dataSource.faultsCount }}</span>
+          </td>
+          <td style="padding: 0; min-width: 20rem;">
+            <p-skeleton *ngIf="loading"/>
+            <p-table *ngIf="!loading" [value]="dataSource.dateTimetables" groupRowsBy="timetableDate"
+                     [rowGroupMode]="'subheader'" class="nested-table"
+                     styleClass="p-datatable-sm p-datatable-gridlines" [expandedRowKeys]="expandedGroups[dataSource.user] || {}">
+              <!-- <ng-template pTemplate="header">
+                <tr >
+                    <th  style="display: none!important;">{{ 'timetable.timetableDate' | translate }}</th>
+                </tr>
+            </ng-template> -->
+              <ng-template pTemplate="groupheader" let-groupRow let-expanded="expanded">
+                <tr>
+                  <td colspan="2">
+                    <button
+                      size="small"
+                      type="button"
+                      pButton
+                      pRipple
+                      [pRowToggler]="groupRow"
+                      [rounded]="true"
+                      class="p-button-text p-button-rounded p-button-plain mr-2"
+                      [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+                    </button>
+                    <span class="font-bold ml-2">{{ groupRow.timetableDate | date: 'yyyy-MM-dd' }}</span>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="rowexpansion" let-dateTimetable>
+                  <tr *ngFor="let timetable of dateTimetable.timetables">
+                    <div class="detail-row" [style]="timetable.valid? 'color: var(--text-color)': 'color: var(--red-500)'">
+                      <td>{{ timetable.timetable.dateTime | date: 'HH:mm:ss' }}</td>
+                      <td><strong>{{ timetable.actionType | translate }}</strong></td>
+                    </div>
+                  </tr>
+                <span *ngIf="!dateTimetable.timetables.length || dateTimetable.timetables.length == 0">
+                  <tr>
+                    <div class="detail-row" [style]="'color: var(--red-500)'">
+                      <td><strong>{{ 'noCheckinData'| translate }}</strong></td>
+                    </div>
+                  </tr>
+                </span>
+              </ng-template>
+            </p-table>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <ng-container *ngIf="loading; else noDataMessage">
+          <tr *ngFor="let i of [].constructor(10)">
+            <td *ngFor="let attribute of attributes">
+              <p-skeleton width="100%" height="15px"></p-skeleton>
+            </td>
+            <td>
+              <p-skeleton width="100%" height="15px"></p-skeleton>
+            </td>
+            <td>
+              <p-skeleton width="100%" height="15px"></p-skeleton>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-template #noDataMessage>
+          <tr>
+            <td [attr.colspan]="attributes.length + 2">{{ 'noData' | translate }}</td>
+          </tr>
+        </ng-template>
+      </ng-template>
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td colspan="8">{{ 'loadingData' | translate }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
