@@ -1,0 +1,22 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card px-2 py-0 mb-4 flex flex-row justify-content-between align-items-center">
+      <app-breadcrumb></app-breadcrumb>
+    </div>
+    <div class="card px-6 py-6">
+      <div class="mb-4">
+        <app-individual-report-search-form class="search-form-container"
+                                           [structure]="structure" [buttonSubmit]="true"
+        ></app-individual-report-search-form>
+      </div>
+      <p-panel *ngIf="dataSize > 0" [toggleable]="true" styleClass="mb-4">
+        <app-chart *ngIf="dataSize > 0 " [data]="chartData" [view]="[1000, 600]"
+                   [properties]="chartProperties"
+                   [chartType]="chartType"></app-chart>
+      </p-panel>
+      <app-individual-report-table-view [structure]="structure" [tableAttributes]="tableAttributes"
+                                        [disableActions]="true"
+                                        (dataChange)="onTableDataChange($event)"></app-individual-report-table-view>
+    </div>
+  </div>
+</div>
