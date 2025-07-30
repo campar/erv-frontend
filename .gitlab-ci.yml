@@ -1,0 +1,75 @@
+stages:
+  - angular-build
+  - docker-build
+
+variables:
+  DOCKER_IMAGE: "example/erv-frontend"
+  DOCKER_TAG: "${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}"
+  ANGULAR_DIST: dist/erv-angular
+
+build-angular:
+  image: node:lts-alpine
+  stage: angular-build
+  when: manual
+  tags:
+    - docker
+  script:
+    - npm ci
+    - npm run build --configuration=production
+  cache:
+    key: npm-cache
+    paths:
+      - node_modules/
+  artifacts:
+    paths:
+      - $ANGULAR_DIST
+    expire_in: 1 hour
+
+.docker_build:
+  stage: docker-build
+  tags:
+    - shell
+  when: manual
+  variables:
+    NODE_ENV: production
+  script:
+    - mkdir -p ./deployment/dist/erv
+    - cp -r $ANGULAR_DIST/* ./deployment/dist/erv
+    - docker login -u "$DOCKER_HUB_USER" -p "$DOCKER_HUB_PASSWORD"
+    - docker build -t $DOCKER_IMAGE:$ENVIRONMENT-$DOCKER_TAG -f ./deployment/Dockerfile .
+    - docker push $DOCKER_IMAGE:$ENVIRONMENT-$DOCKER_TAG
+  needs:
+    - build-angular
+
+build-test:
+  extends: .docker_build
+  before_script:
+    - sed -i -e "s|__BACKEND_LOCATION__|$BACKEND_URL|g" ./deployment/nginx.conf
+    - echo "$SSL_CERTIFICATE" | base64 -d > ./deployment/server.pem
+    - echo "$SSL_KEY" | base64 -d > ./deployment/server.key
+  variables:
+    ENVIRONMENT: "test"
+  environment:
+    name: test
+
+build-local-test:
+  extends: .docker_build
+  before_script:
+    - sed -i -e "s|__BACKEND_LOCATION__|$BACKEND_URL|g" ./deployment/nginx.conf
+    - echo "$SSL_CERTIFICATE" | base64 -d > ./deployment/server.pem
+    - echo "$SSL_KEY" | base64 -d > ./deployment/server.key
+  variables:
+    ENVIRONMENT: "local-test"
+  environment:
+    name: local-test
+
+build-prod:
+  extends: .docker_build
+  before_script:
+    - sed -i -e "s|__BACKEND_LOCATION__|$BACKEND_URL|g" ./deployment/nginx.conf
+    - echo "$SSL_CERTIFICATE" | base64 -d > ./deployment/server.pem
+    - echo "$SSL_KEY" | base64 -d > ./deployment/server.key
+  variables:
+    ENVIRONMENT: "prod"
+  environment:
+    name: prod
