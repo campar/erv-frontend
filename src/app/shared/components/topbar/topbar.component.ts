@@ -80,7 +80,6 @@ export class TopbarComponent implements OnInit, OnDestroy {
       value: language.code,
       command: () => {
         this.switchLanguage(language.code)
-        console.log(`Language changed to: ${language.fullName}`);
       }
     }));
   }

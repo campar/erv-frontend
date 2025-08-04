@@ -81,7 +81,6 @@ export class CheckInStatsPageComponent {
 
   onTableDataChange(data: any[]) {
     this.dataSize = data.length
-    console.log(data.length)
     this.chartData = [];
     this.chartData = [
       new ChartData(

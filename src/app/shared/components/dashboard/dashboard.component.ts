@@ -42,7 +42,6 @@ export class DashboardComponent extends RootComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData(0, false)
-    // console.log(this.chartData)
   }
 
   getData(pageNumber: number, pageChange: boolean) {

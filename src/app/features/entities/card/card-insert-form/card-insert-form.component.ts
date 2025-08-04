@@ -33,7 +33,6 @@ export class CardInsertFormComponent extends GenericInsertFormComponent{
     })
   }
   override onSubmit(navigate?: boolean, callback?: () => void): void {
-    console.log(this.form?.get('active')?.value)
     this.form?.get('expirationDate')?.enable()
     super.onSubmit(navigate, callback)
   }

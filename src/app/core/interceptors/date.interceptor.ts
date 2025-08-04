@@ -60,7 +60,6 @@ function convertDatesToISOString(obj: any): any {
 
   // Check if the object is a string that can be parsed as a date
   if (typeof obj === 'string' && isDateString(obj)) {
-    // console.log("Converting Date String:", obj);
     const parsedDate = new Date(obj);
     return AppDate.from(parsedDate).toString();
   }

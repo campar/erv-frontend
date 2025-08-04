@@ -74,6 +74,5 @@ export class ChartComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSelect($event: Event) {
-    // console.log("On select")
   }
 }

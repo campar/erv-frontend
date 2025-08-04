@@ -37,7 +37,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               let attr;
               if (error.error.details.entity && error.error.details.attribute) {
                 attr = error.error.details?.entity + "." + error.error.details?.attribute;
-                console.log(translationService.translate(attr))
               }
               errorMessage = (attr ? translationService.translate(attr) : "") + " " + translationService.translate(error.error.localizationKey)
               toastService.showError(errorMessage)
@@ -57,7 +56,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                 return next(newAuthReq);
               }),
               catchError((refreshError) => {
-                // console.log(refreshError)
                 authService.logout(false);
                 if (error.error.localizationKey) {
                   errorMessage = translationService.translate(error.error.localizationKey)
@@ -118,29 +116,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             errorMessage = `Unexpected Error: ${error.message}`;
             toastService.showError(error.error.message ? error.error.message : errorMessage)
         }
-        // if (error.status === 401) {
-        //   // Try to refresh the token
-        //   return authService.refreshToken().pipe(
-        //     switchMap(() => {
-        //       // Update the request with the new token
-        //       const newAuthReq = req.clone({
-        //         withCredentials: true,
-        //         // headers: req.headers.set('Authorization', `Bearer ${newAuthToken}`)
-        //       });
-        //       return next(newAuthReq);
-        //     }),
-        //     catchError((refreshError) => {
-        //       console.log(refreshError)
-        //       // If refresh also fails, log the user out and show an error
-        //       // window.location.reload();
-        //       authService.logout();
-        //       toastService.showInfo('Session expired. Please log in again.');
-        //       console.log(refreshError)
-        //       window.location.reload();
-        //       return throwError(refreshError);
-        //     })
-        //   );
-        // }
       }
       searchService.emitSearchEvent(false);
       return throwError(() => new Error(errorMessage));
