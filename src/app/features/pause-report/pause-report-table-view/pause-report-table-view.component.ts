@@ -76,7 +76,7 @@ export class PauseReportTableViewComponent extends GenericTableViewComponent {
             reader.readAsArrayBuffer(data);
           } catch (e) {
             this.showLoader = false;
-            console.log(e);
+            console.error(e);
           }
           this.showLoader = false;
         },

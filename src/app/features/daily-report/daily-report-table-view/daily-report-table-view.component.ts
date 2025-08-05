@@ -73,7 +73,7 @@ export class DailyReportTableViewComponent extends GenericTableViewComponent {
             reader.readAsArrayBuffer(data);
           } catch (e) {
             this.showLoader = false;
-            console.log(e);
+            console.error(e);
           }
           this.showLoader = false;
         },
@@ -102,7 +102,7 @@ export class DailyReportTableViewComponent extends GenericTableViewComponent {
             reader.readAsArrayBuffer(data);
           } catch (e) {
             this.showLoader = false;
-            console.log(e);
+            console.error(e);
           }
           this.showLoader = false;
         },

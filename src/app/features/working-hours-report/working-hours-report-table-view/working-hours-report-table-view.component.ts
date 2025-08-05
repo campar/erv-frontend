@@ -59,7 +59,7 @@ export class WorkingHoursReportTableViewComponent extends GenericTableViewCompon
             reader.readAsArrayBuffer(data);
           } catch (e) {
             this.showLoader = false;
-            console.log(e);
+            console.error(e);
           }
           this.showLoader = false;
         },
@@ -89,7 +89,7 @@ export class WorkingHoursReportTableViewComponent extends GenericTableViewCompon
             reader.readAsArrayBuffer(data);
           } catch (e) {
             this.showLoader = false;
-            console.log(e);
+            console.error(e);
           }
           this.showLoader = false;
         },

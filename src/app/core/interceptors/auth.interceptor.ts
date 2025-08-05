@@ -94,7 +94,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               break;
             }
             errorMessage = 'Too many requests!';
-            console.log(error)
+            console.error(error)
             toastService.showError(error.error.message ? error.error.message : errorMessage)
             break;
           case 500:
@@ -104,7 +104,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
               break;
             }
             errorMessage = 'Internal Server Error: An unexpected error occurred on the server.';
-            console.log(error)
+            console.error(error)
             toastService.showError(error.error.message ? error.error.message : errorMessage)
             break;
           default:
